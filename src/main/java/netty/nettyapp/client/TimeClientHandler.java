@@ -16,19 +16,6 @@ import pojo.UnixTime;
  */
 public class TimeClientHandler extends ChannelInboundHandlerAdapter {
 
-    private ByteBuf buf;
-
-    @Override
-    public void handlerAdded(ChannelHandlerContext ctx) throws Exception {
-        buf = ctx.alloc().buffer(4);
-    }
-
-    @Override
-    public void handlerRemoved(ChannelHandlerContext ctx) throws Exception {
-        buf.release();
-        buf = null;
-    }
-
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
         UnixTime m = (UnixTime) msg;
