@@ -3,12 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package netty.nettyapp.client;
+package netty.nettychat.client;
 
-import io.netty.buffer.ByteBuf;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelInboundHandlerAdapter;
-import pojo.UnixTime;
+import io.netty.channel.*;
+import pojo.Message;
 
 /**
  *
@@ -18,7 +16,8 @@ public class TimeClientHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
-        UnixTime m = (UnixTime) msg;
+        System.out.println("got msg");
+        Message m = (Message) msg;
         System.out.println(m);
         ctx.close();
     }

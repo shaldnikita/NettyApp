@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package netty.nettyapp.server;
+package netty.nettychat.server;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
@@ -26,28 +26,26 @@ public class DiscardServer {
         this.port = port;
     }
 
- public void run() throws Exception {
+    public void run() throws Exception {
         EventLoopGroup bossGroup = new NioEventLoopGroup(); // (1)
         EventLoopGroup workerGroup = new NioEventLoopGroup();
         try {
             ServerBootstrap b = new ServerBootstrap(); // (2)
             b.group(bossGroup, workerGroup)
-             .channel(NioServerSocketChannel.class) // (3)
-             .childHandler(new ChannelInitializer<SocketChannel>() { // (4)
-                @Override
-                protected void initChannel(SocketChannel ch) throws Exception {
-                    ch.pipeline().addLast(new TimeEncoder(),new DiscardServerHandler());
-                }
-                 
-             })
-             .option(ChannelOption.SO_BACKLOG, 128)          // (5)
-             .childOption(ChannelOption.SO_KEEPALIVE, true); // (6)
-    
+                    .channel(NioServerSocketChannel.class) // (3)
+                    .childHandler(new ChannelInitializer<SocketChannel>() { // (4)
+                        @Override
+                        protected void initChannel(SocketChannel ch) throws Exception {
+                            ch.pipeline().addLast(new TimeEncoder(), new TimeDecoder(), new DiscardServerHandler());
+                        }
+
+                    })
+                    .option(ChannelOption.SO_BACKLOG, 128) // (5)
+                    .childOption(ChannelOption.SO_KEEPALIVE, true); // (6)
+
             // Bind and start to accept incoming connections.
             ChannelFuture f = b.bind(port).sync(); // (7)
-            // Wait until the server socket is closed.
-            // In this example, this does not happen, but you can do that to gracefully
-            // shut down your server.
+
             f.channel().closeFuture().sync();
         } finally {
             workerGroup.shutdownGracefully();

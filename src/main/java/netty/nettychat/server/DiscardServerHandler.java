@@ -3,13 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package netty.nettyapp.server;
+package netty.nettychat.server;
 
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
-import pojo.UnixTime;
+import pojo.Message;
 
 /**
  *
@@ -17,14 +15,17 @@ import pojo.UnixTime;
  */
 public class DiscardServerHandler extends ChannelInboundHandlerAdapter { // (1)
 
-    
-    
     @Override
-    public void channelActive(ChannelHandlerContext ctx) throws Exception { 
-        final ChannelFuture f = ctx.writeAndFlush(new UnixTime());
-        f.addListener(ChannelFutureListener.CLOSE); // (4)
+    public void channelActive(ChannelHandlerContext ctx) throws Exception {
+        ctx.channel().writeAndFlush(new Message("hello from server"));
     }
 
+    @Override
+    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+        System.out.println("server got msg");
+        Message m = (Message) msg;
+        System.out.println(m);
+    }
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) { // (4)
