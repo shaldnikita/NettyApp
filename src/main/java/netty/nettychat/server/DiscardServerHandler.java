@@ -6,25 +6,26 @@
 package netty.nettychat.server;
 
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.channel.SimpleChannelInboundHandler;
 import pojo.Message;
 
 /**
  *
  * @author shaldnikita
  */
-public class DiscardServerHandler extends ChannelInboundHandlerAdapter { // (1)
+public class DiscardServerHandler extends SimpleChannelInboundHandler<Message> { // (1)
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         ctx.channel().writeAndFlush(new Message("hello from server"));
+        ctx.channel().writeAndFlush(new Message("hello from server again"));
+
     }
 
     @Override
-    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        System.out.println("server got msg");
-        Message m = (Message) msg;
-        System.out.println(m);
+    protected void channelRead0(ChannelHandlerContext ctx, Message msg) throws Exception {
+        System.out.println("got msg as server");
+        System.out.println(msg);
     }
 
     @Override

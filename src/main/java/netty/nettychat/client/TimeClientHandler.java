@@ -12,19 +12,18 @@ import pojo.Message;
  *
  * @author shaldnikita
  */
-public class TimeClientHandler extends ChannelInboundHandlerAdapter {
-
-    @Override
-    public void channelRead(ChannelHandlerContext ctx, Object msg) {
-        System.out.println("got msg");
-        Message m = (Message) msg;
-        System.out.println(m);
-        ctx.close();
-    }
+public class TimeClientHandler extends SimpleChannelInboundHandler<Message> {
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
         cause.printStackTrace();
+        ctx.close();
+    }
+
+    @Override
+    protected void channelRead0(ChannelHandlerContext ctx, Message msg) throws Exception {
+        System.out.println("got msg");
+        System.out.println(msg);
         ctx.close();
     }
 }

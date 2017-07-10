@@ -1,4 +1,4 @@
-package netty.nettychat.client;
+package netty.nettychat.codec;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
@@ -16,18 +16,18 @@ import pojo.Message;
  *
  * @author shaldnikita
  */
-public class TimeDecoder extends ReplayingDecoder<State> {
+public class MessageDecoder extends ReplayingDecoder<State> {
 
     private int length;
     private long date;
 
-    public TimeDecoder() {
+    public MessageDecoder() {
         super(State.READ_INT);
     }
 
     @Override
     protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) { // (2)
-
+        System.out.println("decode");
         switch (state()) {
             case READ_INT:
                 date = in.readUnsignedInt();
@@ -43,7 +43,7 @@ public class TimeDecoder extends ReplayingDecoder<State> {
             default:
                 throw new Error("Shouldn't reach here.");
         }
-        System.out.println("CLIENT DECODE");
+        System.out.println("DECODE");
     }
 }
 
