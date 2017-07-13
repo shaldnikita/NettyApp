@@ -5,32 +5,52 @@
  */
 package netty.nettychat.server;
 
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.channel.group.ChannelGroup;
+import io.netty.channel.group.DefaultChannelGroup;
+import io.netty.util.concurrent.GlobalEventExecutor;
 import pojo.Message;
 
 /**
  *
  * @author shaldnikita
  */
-public class DiscardServerHandler extends SimpleChannelInboundHandler<Message> { // (1)
+public class DiscardServerHandler extends SimpleChannelInboundHandler<Message> {
+
+    private static final ChannelGroup channels = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
 
     @Override
-    public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        ctx.channel().writeAndFlush(new Message("hello from server"));
-        ctx.channel().writeAndFlush(new Message("hello from server again"));
+    public void handlerAdded(ChannelHandlerContext ctx) throws Exception {
+        Channel incoming = ctx.channel();
+        for (Channel ch : channels) {
+            ch.writeAndFlush(new Message("[SERVER] - " + incoming.remoteAddress() + " has joined!"));
+        }
+        channels.add(incoming);
+    }
 
+    @Override
+    public void handlerRemoved(ChannelHandlerContext ctx) throws Exception {
+        Channel incoming = ctx.channel();
+        for (Channel ch : channels) {
+            ch.writeAndFlush(new Message("[SERVER] - " + incoming.remoteAddress() + " has left!"));
+        }
+        channels.remove(incoming);
     }
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, Message msg) throws Exception {
-        System.out.println("got msg as server");
-        System.out.println(msg);
+        Channel incoming = ctx.channel();
+        for (Channel ch : channels) {
+            if (ch != incoming) {
+                ch.writeAndFlush(msg);
+            }
+        }
     }
 
     @Override
-    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) { // (4)
-        // Close the connection when an exception is raised.
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
         cause.printStackTrace();
         ctx.close();
     }

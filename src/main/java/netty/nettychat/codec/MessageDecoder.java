@@ -26,8 +26,7 @@ public class MessageDecoder extends ReplayingDecoder<State> {
     }
 
     @Override
-    protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) { // (2)
-        System.out.println("decode");
+    protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) {
         switch (state()) {
             case READ_INT:
                 date = in.readUnsignedInt();
@@ -43,7 +42,6 @@ public class MessageDecoder extends ReplayingDecoder<State> {
             default:
                 throw new Error("Shouldn't reach here.");
         }
-        System.out.println("DECODE");
     }
 }
 

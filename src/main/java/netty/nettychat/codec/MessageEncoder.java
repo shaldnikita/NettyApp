@@ -22,6 +22,5 @@ public class MessageEncoder extends MessageToByteEncoder<Message> {
         out.writeInt((int) msg.getDate());
         out.writeInt(msg.getMsg().getBytes().length);
         out.writeBytes(msg.getMsg().getBytes());
-        System.out.println("ENCODE");
     }
 }

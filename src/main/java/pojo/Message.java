@@ -17,7 +17,7 @@ public class Message {
     private final long date;
 
     public Message(String msg) {
-        this(msg,System.currentTimeMillis() / 1000L + 2208988800L);
+        this(msg, System.currentTimeMillis() / 1000L + 2208988800L);
     }
 
     public Message(String msg, long date) {
@@ -25,8 +25,6 @@ public class Message {
         this.date = date;
     }
 
-    
-    
     public String getMsg() {
         return msg;
     }
@@ -34,10 +32,10 @@ public class Message {
     public long getDate() {
         return date;
     }
-    
+
     @Override
     public String toString() {
-        return "["+ new Date((getDate() - 2208988800L) * 1000L).toString()+"]: "+getMsg();
+        return "[" + new Date((getDate() - 2208988800L) * 1000L).toString() + "]: " + getMsg();
     }
 
 }

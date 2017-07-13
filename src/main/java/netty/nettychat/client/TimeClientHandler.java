@@ -22,8 +22,7 @@ public class TimeClientHandler extends SimpleChannelInboundHandler<Message> {
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, Message msg) throws Exception {
-        System.out.println("got msg");
+        System.out.println("[CLIENT]");
         System.out.println(msg);
-        ctx.close();
     }
 }
